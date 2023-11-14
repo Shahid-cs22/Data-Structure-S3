@@ -1,0 +1,90 @@
+Ex.no:5b 					INFIX TO POSTFIX
+
+AIM:
+
+To write a C program to convert infix expression on to postfix expression.
+
+ALGORITHM
+
+1: If the scanned character is an operand, put it into postfix expression.
+2: If the scanned character is an operator and operator's stack is empty, push operator into operators' stack.
+3: If the operator's stack is not empty, there may be following possibilities.
+ If the precedence of scanned operator is greater than the top most operator of operator's stack, push this operator into operator 's stack.
+ If the precedence of scanned operator is less than the top most operator of operator's stack, pop the operators from operator's stack until we find a low precedence operator than the scanned character.
+ If the precedence of scanned operator is equal then check the associativity of the operator. If associativity left to right then pop the operators from stack until we find a low precedence operator. If associativity right to left then simply put into stack.
+ If the scanned character is opening round bracket ( '(' ), push it into operator's stack.
+ If the scanned character is closing round bracket ( ')' ), pop out operators from operator's stack until we find an opening bracket ('(' ).
+4:Repeat Step 1,2 and 3 till expression has character
+5: Now pop out all the remaining operators from the operator's stack and push into postfix expression.
+6: Exit
+
+PROGRAM
+
+#include<stdio.h>
+#include<ctype.h>
+char stack[100];
+int top = -1;
+void push(char x)
+{
+stack[++top] = x;
+}
+char pop()
+{
+if(top == -1)
+return -1;
+else
+return stack[top--];
+}
+int priority(char x)
+{
+if(x == '(')
+return 0;
+if(x == '+' || x == '-')
+return 1;
+if(x == '*' || x == '/')
+return 2;
+return 0;
+}
+int main()
+{
+char exp[100];
+char *e, x;
+printf("Enter the expression : ");
+scanf("%s",exp);
+printf("\n");
+e = exp;
+while(*e != '\0')
+{
+if(isalnum(*e))
+printf("%c ",*e);
+else if(*e == '(')
+push(*e);
+else if(*e == ')')
+{
+while((x = pop()) != '(')
+printf("%c ", x);
+}
+else
+{
+while(priority(stack[top]) >= priority(*e))
+printf("%c ",pop());
+push(*e);
+}
+e++;
+}
+while(top != -1)
+{
+printf("%c ",pop());
+}
+return 0;
+}
+
+OUTPUT:
+
+Enter the expression :
+a+b
+ab+
+
+RESULT:
+
+Thus the C program is written to convert infix expression into post fix expression successfully.
